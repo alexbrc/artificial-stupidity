@@ -1,2 +1,0 @@
-
-print 'o hai'
