@@ -60,10 +60,10 @@ if __name__ == '__main__':
         module_name = sys.argv[1]
         module = __import__(module_name)
         path, d_total = solve(module)
-        print 'a path was found with length', d_total
-        for state in path:
-            print module.get_state_string(state)
-            print
+        print 'a path was found with length %d:' % d_total
+        print
+        state_strings = [module.get_state_string(state) for state in path]
+        print '\n\n'.join(state_strings)
     else:
         print 'Usage: python %s <module-name>' % sys.argv[0]
 
