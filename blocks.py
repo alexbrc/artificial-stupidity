@@ -1,4 +1,6 @@
 
+g_use_big_steps = True
+
 B_BIG = 0
 B_SMALL = 1
 B_WIDE = 2
@@ -60,7 +62,21 @@ def gen_block_successors(substate, block, flattened_state):
     @param state: a frozenset of nine (type, location) pairs
     """
     blocktype, (row, col) = block
-    valid_moves = ((-1, 0), (1, 0), (0, -1), (0, 1))
+    valid_moves = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    if g_use_big_steps:
+        if blocktype == B_WIDE:
+            valid_moves.extend([(0, 2), (0, -2)])
+        elif blocktype == B_TALL:
+            valid_moves.extend([(2, 0), (-2, 0)])
+        elif blocktype == B_SMALL:
+            if (row+1, col) not in flattened_state:
+                valid_moves.extend([(2, 0), (1, -1), (1, 1)])
+            if (row-1, col) not in flattened_state:
+                valid_moves.extend([(-2, 0), (-1, -1), (-1, 1)])
+            if (row, col+1) not in flattened_state:
+                valid_moves.extend([(0, 2), (-1, 1), (1, 1)])
+            if (row, col-1) not in flattened_state:
+                valid_moves.extend([(0, -2), (-1, -1), (1, -1)])
     for drow, dcol in valid_moves:
         # move the block to the new location
         moved_block = (blocktype, (row + drow, col + dcol))
